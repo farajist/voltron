@@ -1,0 +1,17 @@
+- It's a framework, but needs more wrapping :
+	- GameObject's draw function takes a renderer !
+	- TextureManager handles textures through id  
+	- 
+
+=> Hide the renderer details from the user of the framework
+=> TextureManager gotta handle texture objects (more natural approach)
+=> Wrap window related things in a single class
+=> Improve the game object (more reading ;) )
+=> Ummm well, since it'a a framework ! Why not impose a folder structure ?
+	and do auto loading stuff automatically ?
+=> Object for other componenents as well
+=> BoundingBox instead of x, y ?? From GoF
+
+=> Why the actual fuck we have a LoaderParams class if we're duplicatin them inside SDLGameObject ???
+
+Fifth idea needs some discussion ! But results are the best argument ;)
