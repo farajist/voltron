@@ -51,7 +51,7 @@ bool Game::init(std::string title, int xpos, int ypos, int width,
 	// m_go->load(200, 200, 140, 193, "volt_run");
 	 // m_en->load(0, 0, 140, 193, "volt_run");
 
-	m_game_objects.push_back(new Player(new LoaderParams(395, 395, 140, 193, "volt_run")));
+	m_game_objects.push_back(new Player(new LoaderParams(200, 200, 140, 193, "volt_run")));
 	// m_game_objects.push_back(m_go);
 	m_game_objects.push_back(new Enemy(new LoaderParams(0, 0, 140, 193, "volt_run")));
 	

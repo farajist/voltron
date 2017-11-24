@@ -2,7 +2,8 @@
 
 
 SDLGameObject::SDLGameObject(const LoaderParams* p_params) :
-GameObject(p_params), m_pos(p_params->get_x(), p_params->get_y())
+GameObject(p_params), m_pos(p_params->get_x(), p_params->get_y()),
+m_vel(0, 0), m_acc(0, 0)
 {
 	m_width = p_params->get_width();
 	m_height = p_params->get_height();
@@ -24,9 +25,11 @@ void SDLGameObject::update()
 {
 	std::cout << "SDLGameObject's update function called !" << std::endl;
 	// m_x += 1;
-	m_curr_frame = int((SDL_GetTicks() / 100) % 10);
+	// m_curr_frame = int((SDL_GetTicks() / 100) % 10);
 	// m_curr_row = (m_curr_frame + 1) % 1;
-	std::cout << "Current frame : " << m_curr_frame << std::endl;
+	// std::cout << "Current frame : " << m_curr_frame << std::endl;
+	m_vel += m_acc;
+	m_pos += m_vel;
 }
 void SDLGameObject::clean()
 {

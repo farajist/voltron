@@ -15,7 +15,9 @@ public:
 protected:
 
 	Vector2D m_pos;
-
+	Vector2D m_vel;
+	Vector2D m_acc;
+	
 	int m_width;
 	int m_height;
 

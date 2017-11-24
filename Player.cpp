@@ -19,8 +19,11 @@ void Player::draw()
 void Player::update() 
 {
 	std::cout << "Player's update function called !" << std::endl;
-	m_pos.set_x(m_pos.get_x() + 1);
+	// m_pos.set_x(m_pos.get_x() + 1);
 	m_curr_frame = int((SDL_GetTicks() / 100) % 10);
+	// m_vel.set_x(1);
+	m_acc.set_x(1);
+	SDLGameObject::update();
 }
 void Player::clean()
 {
