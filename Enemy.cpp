@@ -19,7 +19,7 @@ void Enemy::update()
 	m_pos.set_x(m_pos.get_x() + 1);
 	// m_y += 1;
 
-	m_curr_frame = int(((SDL_GetTicks() / 100) % 6));
+	m_curr_frame = int(((SDL_GetTicks() / 100) % 10));
 	std::cout << "current frame " << m_curr_frame << std::endl;
 }
 void Enemy::clean()
