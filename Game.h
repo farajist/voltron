@@ -12,7 +12,7 @@
 #include "GameObject.h"
 #include "Player.h"
 #include "Enemy.h"
-
+#include "InputHandler.h"
 class Game
 {
 public:
@@ -28,7 +28,7 @@ public:
 	void update();
 	void handle_events();
 	void clean();
-
+	void quit();
 	bool running() {return mb_running;}
 
 	static Game* get_instance();

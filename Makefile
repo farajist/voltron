@@ -1,5 +1,5 @@
 #OBJS : file to compile as part of the project
-OBJS = TextureManager.cpp Vector2D.cpp LoaderParams.cpp GameObject.cpp SDLGameObject.cpp Player.cpp Enemy.cpp Game.cpp main.cpp
+OBJS = TextureManager.cpp Vector2D.cpp LoaderParams.cpp GameObject.cpp SDLGameObject.cpp Player.cpp Enemy.cpp InputHandler.cpp Game.cpp main.cpp
 
 #CC compiler to be used
 CC = g++
@@ -18,7 +18,7 @@ COMPILER_FLAGS = -Wall --std=c++14
 LINKER_FLAGS = -lSDL2_image
 
 #OBJ_NAME : executable name
-OBJ_NAME = VectorWelcome
+OBJ_NAME = InputHandlerHere
 
 #Target that compiles the executable
 

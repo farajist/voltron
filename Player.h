@@ -4,6 +4,9 @@
 #include "SDLGameObject.h"
 #include "LoaderParams.h"
 
+//This may be in SDLGameObject :v
+#include "InputHandler.h"
+
 class Player : public SDLGameObject
 {
 public: 
@@ -13,5 +16,7 @@ public:
 	void draw();
 	void update();
 	void clean();
+private:
+	void handle_input();
 };
 #endif /*__PLAYER__*/

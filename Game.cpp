@@ -39,6 +39,7 @@ bool Game::init(std::string title, int xpos, int ypos, int width,
 	}
 	/*Everything succeded successfully */
 	std::cout << "initialization succeeded !\n";
+	InputHandler::get_instance()->init_joysticks();
 	mb_running = true;
 	
 	TextureMgr::get_instance()->load("assets/volt.png", "volt_run", Game::get_instance()->get_renderer());
@@ -83,24 +84,14 @@ void Game::update()
 
 void Game::handle_events()
 {
-	SDL_Event event;
-	if (SDL_PollEvent(&event))
-	{
-		switch (event.type)
-		{
-			case SDL_QUIT :
-				mb_running = false;
-				break;
-
-			default : break;
-		}
-	}
+	InputHandler::get_instance()->update();
 }
 
 
 void Game::clean()
 {
 	std::cout << "Cleaning game \n";
+	InputHandler::get_instance()->clean();
 	SDL_DestroyWindow(mp_window);
 	SDL_DestroyRenderer(mp_renderer);
 	SDL_Quit();
@@ -116,3 +107,7 @@ Game* Game::get_instance()
 	return sp_instance;
 }
 
+void Game::quit() 
+{
+	SDL_Quit();
+}

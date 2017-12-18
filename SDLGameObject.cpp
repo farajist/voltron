@@ -16,14 +16,14 @@ m_vel(0, 0), m_acc(0, 0)
 
 void SDLGameObject::draw()
 {
-	std::cout << "SDLGameObject's draw function called !" << std::endl;
+	// std::cout << "SDLGameObject's draw function called !" << std::endl;
 	TextureMgr::get_instance()->draw_frame(m_texture_id, 
 		(int) m_pos.get_x(), (int) m_pos.get_y(),
 		m_width, m_height, m_curr_row, m_curr_frame, Game::get_instance()->get_renderer());
 }
 void SDLGameObject::update() 
 {
-	std::cout << "SDLGameObject's update function called !" << std::endl;
+	// std::cout << "SDLGameObject's update function called !" << std::endl;
 	// m_x += 1;
 	// m_curr_frame = int((SDL_GetTicks() / 100) % 10);
 	// m_curr_row = (m_curr_frame + 1) % 1;
