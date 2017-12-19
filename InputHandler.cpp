@@ -1,7 +1,7 @@
 #include "InputHandler.h"
 
 InputHandler* InputHandler::sp_instance = 0;
-InputHandler::InputHandler() 
+InputHandler::InputHandler() : m_mouse_pos(new Vector2D(0,0))
 {
 
 }
@@ -60,6 +60,7 @@ void InputHandler::init_joysticks()
 void InputHandler::update() 
 {
     SDL_Event event;
+    m_keystates = SDL_GetKeyboardState(0);
     while (SDL_PollEvent(&event))
     {
         if (event.type == SDL_QUIT)
@@ -150,6 +151,13 @@ void InputHandler::update()
             if (event.button.button == SDL_BUTTON_RIGHT)
                 m_mouse_btn_states[RIGHT] = false;
         }
+
+        //mouse is being moved around
+        if (event.type == SDL_MOUSEMOTION)
+        {
+            m_mouse_pos->set_x(event.motion.x);
+            m_mouse_pos->set_y(event.motion.y);
+        }
     }
 }
 
@@ -202,4 +210,8 @@ bool InputHandler::get_button_state(int joy, int btn_nb)
 bool InputHandler::get_mouse_btn_state(int btn_nb) 
 {
     return m_mouse_btn_states[btn_nb];
+}
+Vector2D* InputHandler::get_mouse_pos()
+{
+    return m_mouse_pos;
 }

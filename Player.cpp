@@ -73,8 +73,9 @@ void Player::handle_input()
 	}
 
 	if (InputHandler::get_instance()->get_mouse_btn_state(LEFT)){
-		std::cout << "Mouse left button clicked !";
 		m_vel.set_x(1);
 	}
-		
+
+	Vector2D* vec = InputHandler::get_instance()->get_mouse_pos();
+	m_vel = (*vec - m_pos) / 100;	
 }

@@ -30,6 +30,7 @@ public:
 
     bool get_button_state(int, int);
     bool get_mouse_btn_state(int);
+    Vector2D* get_mouse_pos();
     int x_val(int, int);
     int y_val(int, int);
     void update();
@@ -42,8 +43,10 @@ private:
     std::vector<bool> m_mouse_btn_states;
     bool mb_joysticks_inited;
 
+    Vector2D* m_mouse_pos;
+
     InputHandler();
-    ~InputHandler() {}
+    ~InputHandler() { if (m_mouse_pos) delete m_mouse_pos;}
     static InputHandler* sp_instance;
 };
 
