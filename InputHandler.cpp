@@ -29,6 +29,12 @@ void InputHandler::init_joysticks()
 
                 m_joy_vals.push_back(std::make_pair(new 
                 Vector2D(0,0), new Vector2D(0,0))); //add pair of vectors
+                std::vector<bool> temp_btns;
+                //push false for each button as it's not pressed
+                for (int j = 0; j < SDL_JoystickNumButtons(joy); ++j)
+                    temp_btns.push_back(false);
+                //push states to each joystick ;)
+                m_button_states.push_back(temp_btns);
             }
             else
                 std::cout << "Couldn't open joystick n " << i << SDL_GetError() << std::endl;
@@ -38,7 +44,6 @@ void InputHandler::init_joysticks()
         SDL_JoystickEventState(SDL_ENABLE);
         //set the state of init to true
         mb_joysticks_inited = true;
-
         std::cout << "Initialized " << m_joysticks.size() << " joystick(s)" << std::endl;
     }
     else
@@ -46,9 +51,12 @@ void InputHandler::init_joysticks()
         mb_joysticks_inited = false;
         std::cout << "Initialized 0 joystick(s)" << std::endl;
     }
+    // mouse buttons initialization part
+    for (int i = 0; i < 3; ++i)
+        m_mouse_btn_states.push_back(false);
         
 }
-
+//TODO: this is getting serious , please make subroutines
 void InputHandler::update() 
 {
     SDL_Event event;
@@ -110,6 +118,38 @@ void InputHandler::update()
                     m_joy_vals[which_one].second->set_y(0);
             }
         }
+        //a joystick button was pressed
+        if (event.type == SDL_JOYBUTTONDOWN)
+        {
+            int which_one = event.jaxis.which;
+            m_button_states[which_one][event.jbutton.button] = true;
+        }
+        //a joystick button was released 
+        if (event.type == SDL_JOYBUTTONUP)
+        {
+            int which_one = event.jaxis.which;
+            m_button_states[which_one][event.jbutton.button] = false;
+        }
+        //[why init the enum with our values why not just use predefined and directly map below ?]
+        //a mouse was button pressed 
+        if (event.type == SDL_MOUSEBUTTONDOWN) 
+        {
+            if (event.button.button == SDL_BUTTON_LEFT)
+                m_mouse_btn_states[LEFT] = true;
+            if (event.button.button == SDL_BUTTON_MIDDLE)
+                m_mouse_btn_states[MIDDLE] = true;
+            if (event.button.button == SDL_BUTTON_RIGHT)
+                m_mouse_btn_states[RIGHT] = true;
+        }
+        if (event.type == SDL_MOUSEBUTTONUP)
+        {
+            if (event.button.button == SDL_BUTTON_LEFT)
+                m_mouse_btn_states[LEFT] = false;
+            if (event.button.button == SDL_BUTTON_MIDDLE)
+                m_mouse_btn_states[MIDDLE] = false;
+            if (event.button.button == SDL_BUTTON_RIGHT)
+                m_mouse_btn_states[RIGHT] = false;
+        }
     }
 }
 
@@ -152,4 +192,14 @@ int InputHandler::y_val(int joy, int stick)
         }
     }
     return 0;
+}
+
+bool InputHandler::get_button_state(int joy, int btn_nb) 
+{
+    return m_button_states[joy][btn_nb];
+}
+
+bool InputHandler::get_mouse_btn_state(int btn_nb) 
+{
+    return m_mouse_btn_states[btn_nb];
 }

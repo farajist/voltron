@@ -18,7 +18,7 @@ COMPILER_FLAGS = -Wall --std=c++14
 LINKER_FLAGS = -lSDL2_image
 
 #OBJ_NAME : executable name
-OBJ_NAME = InputHandlerHere
+OBJ_NAME = MouseWeHandleToo
 
 #Target that compiles the executable
 
