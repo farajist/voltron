@@ -7,15 +7,14 @@
 
 Player::Player(const LoaderParams *p_params) : SDLGameObject(p_params) 
 {
-
 }
-
 
 void Player::draw() 
 {
 	// std::cout << "Player's draw function called !" << std::endl;
 	SDLGameObject::draw();
 }
+
 void Player::update() 
 {
 	// std::cout << "Player's update function called !" << std::endl;
@@ -29,6 +28,7 @@ void Player::update()
 	
 	SDLGameObject::update();
 }
+
 void Player::clean()
 {
 	SDLGameObject::clean();
@@ -76,6 +76,19 @@ void Player::handle_input()
 		m_vel.set_x(1);
 	}
 
-	Vector2D* vec = InputHandler::get_instance()->get_mouse_pos();
-	m_vel = (*vec - m_pos) / 100;	
+	// Vector2D* vec = InputHandler::get_instance()->get_mouse_pos();
+	// m_vel = (*vec - m_pos) / 100;	
+
+	if (InputHandler::get_instance()->is_key_down(SDL_SCANCODE_RIGHT)){
+		m_vel.set_x(2);
+	}
+	if (InputHandler::get_instance()->is_key_down(SDL_SCANCODE_LEFT)){
+		m_vel.set_x(-2);
+	}
+	if (InputHandler::get_instance()->is_key_down(SDL_SCANCODE_UP)){
+		m_vel.set_y(-2);
+	}
+	if (InputHandler::get_instance()->is_key_down(SDL_SCANCODE_DOWN)){
+		m_vel.set_y(2);
+	}
 }

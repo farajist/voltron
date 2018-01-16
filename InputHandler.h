@@ -30,6 +30,24 @@ public:
 
     bool get_button_state(int, int);
     bool get_mouse_btn_state(int);
+    bool is_key_down(SDL_Scancode);
+
+    //private functions to handle diffrent event types
+
+    //keyboard events
+    void on_key_down();
+    void on_key_up();
+
+    //mouse events
+    void on_mouse_move(SDL_Event&);
+    void on_mouse_button_down(SDL_Event& );
+    void on_mouse_button_up(SDL_Event&);
+
+    //joystick events
+    void on_joystick_axis_move(SDL_Event&);
+    void on_joystick_button_down(SDL_Event&);
+    void on_joystick_button_up(SDL_Event&);
+
     Vector2D* get_mouse_pos();
     int x_val(int, int);
     int y_val(int, int);
@@ -42,11 +60,12 @@ private:
     std::vector<std::vector<bool>> m_button_states;
     std::vector<bool> m_mouse_btn_states;
     bool mb_joysticks_inited;
+    Uint8* m_keystates;
 
     Vector2D* m_mouse_pos;
 
     InputHandler();
-    ~InputHandler() { if (m_mouse_pos) delete m_mouse_pos;}
+    ~InputHandler();
     static InputHandler* sp_instance;
 };
 

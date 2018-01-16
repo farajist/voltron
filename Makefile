@@ -18,9 +18,12 @@ COMPILER_FLAGS = -Wall --std=c++14
 LINKER_FLAGS = -lSDL2_image
 
 #OBJ_NAME : executable name
-OBJ_NAME = MouseWeHandleToo
+OBJ_NAME = Jam
 
 #Target that compiles the executable
 
 all : $(OBJS)
 	$(CC) $(OBJS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)
+
+clean :
+	rm Jam
