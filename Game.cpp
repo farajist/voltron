@@ -39,10 +39,13 @@ bool Game::init(std::string title, int xpos, int ypos, int width,
 	}
 	/*Everything succeded successfully */
 	std::cout << "initialization succeeded !\n";
-	InputHandler::get_instance()->init_joysticks();
-	mb_running = true;
 	
+	mb_running = true;
+
+	InputHandler::get_instance()->init_joysticks();
 	TextureMgr::get_instance()->load("assets/volt.png", "volt_run", Game::get_instance()->get_renderer());
+	m_pgame_state_machine = new GameStateMachine();
+	m_pgame_state_machine->change_state(new MenuState());
 
 	// m_player = new Player();
 	// m_go = new GameObject();
@@ -51,10 +54,11 @@ bool Game::init(std::string title, int xpos, int ypos, int width,
 	// m_player->load(395, 395, 140, 193, "volt_run");
 	// m_go->load(200, 200, 140, 193, "volt_run");
 	 // m_en->load(0, 0, 140, 193, "volt_run");
-
-	m_game_objects.push_back(new Player(new LoaderParams(200, 200, 140, 193, "volt_run")));
 	// m_game_objects.push_back(m_go);
-	m_game_objects.push_back(new Enemy(new LoaderParams(0, 0, 140, 193, "volt_run")));
+
+	// m_game_objects.push_back(new Player(new LoaderParams(200, 200, 140, 193, "volt_run")));
+	
+	// m_game_objects.push_back(new Enemy(new LoaderParams(0, 0, 140, 193, "volt_run")));
 	
 
 	return true;
@@ -67,9 +71,11 @@ void Game::render()
 	SDL_RenderClear(mp_renderer);
 
 	//replaced the two calls to draw [GameObject integration]
-	for (auto go : m_game_objects)
-		go->draw();
+	// for (auto go : m_game_objects)
+	// 	go->draw();
 
+	//FSM is being used now ;)
+	m_pgame_state_machine->render();
 	/*Drawing to the screen*/
 	SDL_RenderPresent(mp_renderer);
 }
@@ -78,13 +84,17 @@ void Game::update()
 {
 	/*to implement*/
 	// m_current_frame = int((SDL_GetTicks() / 100) % 6);
-	for (auto go : m_game_objects)
-		go->update();
+	// for (auto go : m_game_objects)
+	// 	go->update();
+
+	m_pgame_state_machine->update();
 }
 
 void Game::handle_events()
 {
 	InputHandler::get_instance()->update();
+	if (InputHandler::get_instance()->is_key_down(SDL_SCANCODE_RETURN))
+		m_pgame_state_machine->change_state(new PlayState());
 }
 
 

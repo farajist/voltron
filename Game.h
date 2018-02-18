@@ -13,6 +13,11 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "InputHandler.h"
+#include "GameStateMachine.h"
+#include "PlayState.h"
+#include "MenuState.h"
+
+
 class Game
 {
 public:
@@ -44,6 +49,7 @@ private:
 	// GameObject m_go;
 	// Player m_player;
 
+	GameStateMachine* m_pgame_state_machine;
 	std::vector<GameObject*> m_game_objects;
 
 	GameObject* m_player;
