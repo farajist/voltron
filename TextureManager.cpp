@@ -76,3 +76,8 @@ TextureManager* TextureManager::get_instance() {
 	}
 	return sp_instance;
 }
+
+void TextureManager::clear_from_texture_map(std::string id)
+{
+	m_texture_map.erase(id);
+}

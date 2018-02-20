@@ -20,6 +20,7 @@ public:
 		int curr_row, int curr_frame, SDL_Renderer *p_renderer, 
 		SDL_RendererFlip flip = SDL_FLIP_NONE);
 
+	void clear_from_texture_map(std::string id);
 	static TextureManager* get_instance();
 private:
 	TextureManager() {}
