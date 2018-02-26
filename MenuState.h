@@ -4,10 +4,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
+
 #include "TextureManager.h"
 #include "GameState.h"
 #include "GameObject.h"
-
 #include "MenuButton.h"
 
 class MenuState : public GameState

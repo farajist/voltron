@@ -1,6 +1,7 @@
 #ifndef __GAME_STATE_MACHINE__
 #define __GAME_STATE_MACHINE__
 
+#include <iostream>
 #include <vector>
 #include "GameState.h"
 

@@ -23,7 +23,7 @@ void Player::update()
 	m_vel.set_y(0);
 
 	handle_input();
-	m_curr_frame = int((SDL_GetTicks() / 100) % 10);
+	m_curr_frame = int((SDL_GetTicks() / 100) % 6);
 	// m_vel.set_x(1);
 	
 	SDLGameObject::update();
@@ -37,58 +37,9 @@ void Player::clean()
 
 void Player::handle_input() 
 {
-	if (InputHandler::get_instance()->joysticks_initialised()) 
-	{
-		if ((InputHandler::get_instance()->x_val(0, 1) > 0) || 
-		(InputHandler::get_instance()->x_val(0, 1) < 0)) 
-		{
-			std::cout << "X velocity's changed" << std::endl;
-			m_vel.set_x(1 * InputHandler::get_instance()->x_val(0,1));
-		}
-			
-		
-		if ((InputHandler::get_instance()->y_val(0, 1) > 0) || 
-		(InputHandler::get_instance()->y_val(0, 1) < 0))
-		{
-			std::cout << "Y velocity's changed" << std::endl;
-			m_vel.set_y(1 * InputHandler::get_instance()->x_val(0,1));
-		}
-			
+	Vector2D* target = InputHandler::get_instance()
+	->get_mouse_pos();
 
-		if ((InputHandler::get_instance()->x_val(0, 2) > 0) || 
-		(InputHandler::get_instance()->x_val(0, 2) < 0))
-		{
-			std::cout << "X velocity's changed" << std::endl;
- 			m_vel.set_x(1 * InputHandler::get_instance()->x_val(0,2));
-		}
-			
-
-		if ((InputHandler::get_instance()->y_val(0, 2) > 0) || 
-		(InputHandler::get_instance()->y_val(0, 2) < 0))
-		{
-			std::cout << "Y velocity's changed" << std::endl;
-			m_vel.set_y(1 * InputHandler::get_instance()->y_val(0,1));
-		}
-			
-	}
-
-	if (InputHandler::get_instance()->get_mouse_btn_state(LEFT)){
-		m_vel.set_x(1);
-	}
-
-	// Vector2D* vec = InputHandler::get_instance()->get_mouse_pos();
-	// m_vel = (*vec - m_pos) / 100;	
-
-	if (InputHandler::get_instance()->is_key_down(SDL_SCANCODE_RIGHT)){
-		m_vel.set_x(2);
-	}
-	if (InputHandler::get_instance()->is_key_down(SDL_SCANCODE_LEFT)){
-		m_vel.set_x(-2);
-	}
-	if (InputHandler::get_instance()->is_key_down(SDL_SCANCODE_UP)){
-		m_vel.set_y(-2);
-	}
-	if (InputHandler::get_instance()->is_key_down(SDL_SCANCODE_DOWN)){
-		m_vel.set_y(2);
-	}
+	m_vel = *target - m_pos;
+	m_vel /= 50;
 }

@@ -15,6 +15,9 @@ public:
 	virtual std::string state_id() const = 0;
 
 	virtual ~GameState(){}
+
+// protected:
+// 	bool m_exiting;
 };
 
 #endif /* __GAME_STATE__ */

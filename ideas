@@ -22,3 +22,10 @@ game state : rather a stacka adapter ?
 		unique_ptrs babe
 fcking textureBuilder
 fcking animatorsBuilders xD
+
+
+=> TextureManager's load has a shitty param called id, while it can
+be dumnbassedly deduced from name !!!!
+
+=> for God sake, shit is so common btwn states, tel3 lfoo9 asat 
+	... l'abstra ma3endch dilmok

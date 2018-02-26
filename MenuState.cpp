@@ -4,10 +4,13 @@ const std::string MenuState::s_menu_id = "MENU";
 
 void MenuState::update()
 {
-	for (auto &go : m_game_objects)
-	{
-		go->update();
-	}
+	// if (!m_exiting)
+	// {
+		for (auto &go : m_game_objects)
+		{
+			go->update();
+		}
+	// }
 }
 
 
@@ -35,10 +38,10 @@ bool MenuState::on_enter()
 	}
 	
 	GameObject* btn_play = new MenuButton(new LoaderParams(100, 100,
-	400, 100, "playbutton"));
+	400, 100, "playbutton"), MenuButton::s_menu_to_play);
 
 	GameObject* btn_exit = new MenuButton(new LoaderParams(100, 300,
-	400, 100, "exitbutton"));
+	400, 100, "exitbutton"), MenuButton::s_exit_from_menu);
 
 	m_game_objects.push_back(btn_play);
 	m_game_objects.push_back(btn_exit);
@@ -51,6 +54,7 @@ bool MenuState::on_enter()
 bool MenuState::on_exit()
 {
 
+	// m_exiting = true;
 	for(auto& go : m_game_objects) 
 	{
 		go->clean();

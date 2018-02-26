@@ -3,11 +3,17 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
+
 #include "GameState.h"
+#include "GameObject.h"
+#include "TextureManager.h"
 
 class PlayState : public GameState
 {
 public:
+	typedef TextureManager TextureMgr;
+
 	virtual void update();
 	virtual void render();
 
@@ -18,5 +24,8 @@ public:
 
 private:
 	static const std::string s_play_id;
+	std::vector<GameObject*> m_game_objects;
 };
+
+#include "Game.h"
 #endif /* __PLAY_STATE__ */

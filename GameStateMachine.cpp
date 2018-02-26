@@ -16,7 +16,7 @@ void GameStateMachine::change_state(GameState* p_state)
 			//private leave to avoid repitition !
 		if (m_game_states.back()->on_exit()) 
 		{
-			delete m_game_states.back();
+			// delete m_game_states.back(); => headache wallah
 			m_game_states.pop_back();
 		}
 	}

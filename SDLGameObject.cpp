@@ -17,9 +17,22 @@ m_vel(0, 0), m_acc(0, 0)
 void SDLGameObject::draw()
 {
 	// std::cout << "SDLGameObject's draw function called !" << std::endl;
-	TextureMgr::get_instance()->draw_frame(m_texture_id, 
-		(int) m_pos.get_x(), (int) m_pos.get_y(),
-		m_width, m_height, m_curr_row, m_curr_frame, Game::get_instance()->get_renderer());
+	// TextureMgr::get_instance()->draw_frame(m_texture_id, 
+	// 	(int) m_pos.get_x(), (int) m_pos.get_y(),
+	// 	m_width, m_height, m_curr_row, m_curr_frame, Game::get_instance()->get_renderer());
+
+	if (m_vel.get_x() > 0) 
+	{
+		TextureMgr::get_instance()->draw_frame(m_texture_id, (Uint32)m_pos.get_x(),
+		(Uint32)m_pos.get_y(), m_width, m_height, m_curr_row, m_curr_frame,
+		Game::get_instance()->get_renderer(), SDL_FLIP_HORIZONTAL);
+	}
+	else 
+	{
+		TextureMgr::get_instance()->draw_frame(m_texture_id, (Uint32)m_pos.get_x(),
+		(Uint32)m_pos.get_y(), m_width, m_height, m_curr_row, m_curr_frame,
+		Game::get_instance()->get_renderer());
+	}
 }
 void SDLGameObject::update() 
 {
