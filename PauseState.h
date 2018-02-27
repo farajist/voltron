@@ -1,6 +1,5 @@
-#ifndef __MENU_STATE__
-#define __MENU_STATE__
-
+#ifndef __PAUSE_STATE__
+#define __PAUSE_STATE__
 #include <iostream>
 #include <string>
 #include <vector>
@@ -10,7 +9,8 @@
 #include "GameObject.h"
 #include "MenuButton.h"
 
-class MenuState : public GameState
+
+class PauseState : public GameState 
 {
 public:
 	typedef TextureManager TextureMgr;
@@ -20,15 +20,15 @@ public:
 	virtual bool on_enter();
 	virtual bool on_exit();
 
-	virtual std::string state_id() const { return s_menu_id; };
+	virtual std::string state_id() const { return s_pause_id; };
 
 private:
 
-	static void s_menu_to_play();
-	static void s_exit_from_menu();
-	static const std::string s_menu_id;
+	static void s_pause_to_main();
+	static void s_resume_play();
+
+	static const std::string s_pause_id;
 	std::vector<GameObject*> m_game_objects;
 };
 
-#include "Game.h"
-#endif /* __MENU_STATE__ */
+#endif /* __PAUSE_STATE__ */

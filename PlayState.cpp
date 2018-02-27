@@ -4,13 +4,14 @@ const std::string PlayState::s_play_id = "PLAY";
 
 void PlayState::update()
 {
-	// if (!m_exiting)
-	// {
-		for (auto &go : m_game_objects)
-		{
-			go->update();
-		}
-	// }
+	if (InputHandler::get_instance()->is_key_down(SDL_SCANCODE_ESCAPE))
+	{
+		Game::get_instance()->get_state_machine()->push_state(new PauseState());
+	}
+	for (auto &go : m_game_objects)
+	{
+		go->update();
+	}
 }
 
 void PlayState::render()

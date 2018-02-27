@@ -48,16 +48,3 @@ void MenuButton::clean()
 {
 	SDLGameObject::clean();
 }
-
-void MenuButton::s_menu_to_play()
-{
-	std::cout << "Play button clicked !" << std::endl;
-	Game::get_instance()->get_state_machine()->change_state(new PlayState());
-}
-
-void MenuButton::s_exit_from_menu()
-{
-	std::cout << "Exit button clicked ! Goodbye :D" << std::endl;
-	Game::get_instance()->quit();
-
-}

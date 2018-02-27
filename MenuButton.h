@@ -11,10 +11,7 @@ public:
 	virtual void draw();
 	virtual void update();
 	virtual void clean();
-
-	static void s_menu_to_play();
-	static void s_exit_from_menu();
-
+	
 private:
 	void (*m_callback) ();
 	bool m_breleased;

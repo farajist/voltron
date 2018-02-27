@@ -30,7 +30,7 @@ void GameStateMachine::pop_state()
 	{
 		if (m_game_states.back()->on_exit())
 		{
-			delete m_game_states.back();
+			// delete m_game_states.back();
 			m_game_states.pop_back();
 		}
 	}
