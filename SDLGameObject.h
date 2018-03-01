@@ -12,6 +12,10 @@ public:
 	virtual void update();
 	virtual void draw();
 	virtual void clean();
+
+	Vector2D& get_pos() { return m_pos; }
+	int get_width() { return m_width; }
+	int get_height() { return m_height; }
 protected:
 
 	Vector2D m_pos;

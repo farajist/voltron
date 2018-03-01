@@ -6,7 +6,8 @@
 // }
 Enemy::Enemy(const LoaderParams *p_params) : SDLGameObject(p_params) 
 {
-
+	m_vel.set_y(2);
+	m_vel.set_x(0.001);
 }
 void Enemy::draw() 
 {
@@ -16,14 +17,22 @@ void Enemy::draw()
 void Enemy::update() 
 {
 	// std::cout << "Enemy's update function called !" << std::endl;
-	m_pos.set_x(m_pos.get_x() + 1);
+	// m_pos.set_x(m_pos.get_x() + 1);
 	// m_y += 1;
 
-	m_curr_frame = int(((SDL_GetTicks() / 100) % 10));
+	//hardcode for now -_x !
+	m_curr_frame = int(((SDL_GetTicks() / 100) % 5));
 	// std::cout << "current frame " << m_curr_frame << std::endl;
+
+	if (m_pos.get_y() < 0)
+		m_vel.set_y(2);
+	else if (m_pos.get_y() > 480)
+		m_vel.set_y(-2);
+
+	SDLGameObject::update();
 }
 void Enemy::clean()
 {
 	SDLGameObject::clean();
-	std::cout << "Enemy's clean function called !" << std::endl;
+	// std::cout << "Enemy's clean function called !" << std::endl;
 }

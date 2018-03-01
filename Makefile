@@ -1,5 +1,5 @@
 #OBJS : file to compile as part of the project
-OBJS = TextureManager.cpp Vector2D.cpp LoaderParams.cpp GameObject.cpp SDLGameObject.cpp Player.cpp Enemy.cpp MenuButton.cpp InputHandler.cpp GameStateMachine.cpp GameState.cpp PauseState.cpp PlayState.cpp MenuState.cpp Game.cpp main.cpp
+OBJS = TextureManager.cpp Vector2D.cpp LoaderParams.cpp GameObject.cpp SDLGameObject.cpp Player.cpp Enemy.cpp AnimatedGraphic.cpp MenuButton.cpp InputHandler.cpp GameStateMachine.cpp GameState.cpp PauseState.cpp PlayState.cpp MenuState.cpp GameOverState.cpp Game.cpp main.cpp
 
 #CC compiler to be used
 CC = g++-7
