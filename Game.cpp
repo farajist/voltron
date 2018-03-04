@@ -18,7 +18,7 @@ bool Game::init(std::string title, int xpos, int ypos, int width,
 			if (mp_renderer != NULL)
 			{
 				std::cout << "SDLRenderer creation success \n";
-				SDL_SetRenderDrawColor(mp_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+				SDL_SetRenderDrawColor(mp_renderer, 0x00, 0x00, 0x00, 0x00);
 			} 
 			else 
 			{
