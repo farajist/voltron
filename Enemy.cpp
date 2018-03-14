@@ -1,14 +1,17 @@
 #include "Enemy.h"
 
-// void Enemy::load(int x, int y, int w, int h, std::string id) 
-// {
-// 	GameObject::load(x, y, w, h, id);
-// }
-Enemy::Enemy(const LoaderParams *p_params) : SDLGameObject(p_params) 
+Enemy::Enemy() : SDLGameObject() 
 {
+	
+}
+
+void Enemy::load(const LoaderParams* p_params)
+{
+	SDLGameObject::load(p_params);
 	m_vel.set_y(2);
 	m_vel.set_x(0.001);
 }
+
 void Enemy::draw() 
 {
 	// std::cout << "Enemy's draw function called !" << std::endl;

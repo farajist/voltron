@@ -44,23 +44,15 @@ bool Game::init(std::string title, int xpos, int ypos, int width,
 
 	InputHandler::get_instance()->init_joysticks();
 	TextureMgr::get_instance()->load("assets/volt.png", "volt_run", Game::get_instance()->get_renderer());
+	
+	GameObjectFactory::get_instance()->register_type("MenuButton", new MenuButtonCreator());
+	GameObjectFactory::get_instance()->register_type("AnimatedGraphic", new AnimatedGraphicCreator());
+	GameObjectFactory::get_instance()->register_type("Player", new PlayerCreator());
+	GameObjectFactory::get_instance()->register_type("Enemy", new EnemyCreator());
+
+
 	m_pgame_state_machine = new GameStateMachine();
-	m_pgame_state_machine->change_state(new MenuState());
-
-	// m_player = new Player();
-	// m_go = new GameObject();
-	// m_en = new Enemy();
-
-	// m_player->load(395, 395, 140, 193, "volt_run");
-	// m_go->load(200, 200, 140, 193, "volt_run");
-	 // m_en->load(0, 0, 140, 193, "volt_run");
-	// m_game_objects.push_back(m_go);
-
-	// m_game_objects.push_back(new Player(new LoaderParams(200, 200, 140, 193, "volt_run")));
-	
-	// m_game_objects.push_back(new Enemy(new LoaderParams(0, 0, 140, 193, "volt_run")));
-	
-
+	m_pgame_state_machine->change_state(new MainMenuState());
 	return true;
 }
 

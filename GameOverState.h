@@ -6,13 +6,13 @@
 #include <vector>
 
 #include "TextureManager.h"
-#include "GameState.h"
+#include "MenuState.h"
 #include "GameObject.h"
 #include "MenuButton.h"
 #include "AnimatedGraphic.h"
 
 
-class GameOverState : public GameState 
+class GameOverState : public MenuState 
 {
 public:
 	typedef TextureManager TextureMgr;
@@ -26,6 +26,8 @@ public:
 
 private:
 
+	virtual void set_callbacks(const std::vector<Callback>&);
+	
 	static void s_game_over_to_main();
 	static void s_restart_play();
 

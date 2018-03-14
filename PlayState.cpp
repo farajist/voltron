@@ -28,25 +28,8 @@ void PlayState::render()
 
 bool PlayState::on_enter()
 {
-	if (!TextureMgr::get_instance()->load("assets/helicopter.png", "heli",
-	Game::get_instance()->get_renderer()))
-	{
-		return false;
-	}
-
-	if (!TextureMgr::get_instance()->load("assets/helicopter_en.png", "heli_en",
-	Game::get_instance()->get_renderer()))
-	{
-		return false;
-	}
-
-
-	GameObject *player = new Player(new LoaderParams(500, 100, 128, 55, "heli"));
-	// m_game_objects.push_back(player); => wirus
-	
-	GameObject *enemy = new Enemy(new LoaderParams(100, 100, 128, 55, "heli_en"));
-	m_game_objects.push_back(player);
-	m_game_objects.push_back(enemy);
+	StateParser parser;
+	parser.parse_state("test.xml", s_play_id, &m_game_objects, &m_texture_ids);
 
 	std::cout << "Entering PlayState\n";
 	return true;
@@ -62,7 +45,8 @@ bool PlayState::on_exit()
 	}
 	m_game_objects.clear();
 	//bullshit right ?
-	TextureMgr::get_instance()->clear_from_texture_map("heli");
+	for (auto& ti : m_texture_ids)
+		TextureMgr::get_instance()->clear_from_texture_map(ti);
 
 	std::cout << "Exiting PlayState\n";
 	return true;

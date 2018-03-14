@@ -1,12 +1,12 @@
 #include "Player.h"
 
-// void Player::load(int x, int y, int w, int h, std::string id) 
-// {
-// 	GameObject::load(x, y, w, h, id);
-// }
-
-Player::Player(const LoaderParams *p_params) : SDLGameObject(p_params) 
+Player::Player() : SDLGameObject() 
 {
+}
+
+void Player::load(const LoaderParams *p_params)
+{
+	SDLGameObject::load(p_params);
 }
 
 void Player::draw() 

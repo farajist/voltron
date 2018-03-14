@@ -1,6 +1,6 @@
 #include "GameOverState.h"
 
-const std::string GameOverState::s_game_over_id = "GAME_OVER";
+const std::string GameOverState::s_game_over_id = "GAMEOVER";
 
 void GameOverState::update()
 {
@@ -22,36 +22,14 @@ void GameOverState::render()
 bool GameOverState::on_enter()
 {
 	
-	if (!TextureMgr::get_instance()->load("assets/gameover.png", 
-	"gameoverlabel", Game::get_instance()->get_renderer()))
-	{
-		return false;
-	}
-
-	if (!TextureMgr::get_instance()->load("assets/main.png",
-	"mainbutton", Game::get_instance()->get_renderer()))
-	{
-		return false;
-	}
+	StateParser parser;
+	parser.parse_state("test.xml", s_game_over_id, &m_game_objects, &m_texture_ids);
 	
-	if (!TextureMgr::get_instance()->load("assets/restart.png",
-	"restartbutton", Game::get_instance()->get_renderer()))
-	{
-		return false;
-	}
-
-	GameObject* game_over_label = new AnimatedGraphic(new LoaderParams(200, 100,
-	190, 30, "gameoverlabel"), 2);
-
-	GameObject* btn_main = new MenuButton(new LoaderParams(200, 200,
-	200, 80, "mainbutton"), s_game_over_to_main);
-
-	GameObject* btn_restart = new MenuButton(new LoaderParams(200, 300,
-	200, 80, "restartbutton"), s_restart_play);
-
-	m_game_objects.push_back(game_over_label);
-	m_game_objects.push_back(btn_main);
-	m_game_objects.push_back(btn_restart);
+	m_callbacks.push_back(0);
+	m_callbacks.push_back(s_game_over_to_main);
+	m_callbacks.push_back(s_restart_play);
+	
+	set_callbacks(m_callbacks);
 
 	std::cout << "Entering GameOverState\n";
 	return true;
@@ -68,8 +46,8 @@ bool GameOverState::on_exit()
 	}
 	m_game_objects.clear();
 	//bullshit right ?
-	TextureMgr::get_instance()->clear_from_texture_map("playbutton");
-	TextureMgr::get_instance()->clear_from_texture_map("exitbutton");
+	for (auto& ti : m_texture_ids)
+		TextureMgr::get_instance()->clear_from_texture_map(ti);
 
 	std::cout << "Exiting MenuState\n";
 	return true;
@@ -77,10 +55,25 @@ bool GameOverState::on_exit()
 
 void GameOverState::s_game_over_to_main()
 {
-	Game::get_instance()->get_state_machine()->change_state(new MenuState());
+	Game::get_instance()->get_state_machine()->change_state(new MainMenuState());
 }
 
 void GameOverState::s_restart_play()
 {
 	Game::get_instance()->get_state_machine()->change_state(new PlayState());
+}
+
+
+void GameOverState::set_callbacks(const std::vector<Callback>& cbcks)
+{
+	//same as always : now in each game state a part
+	for (auto &go : m_game_objects)
+	{
+		//if object is menubutton give a callback
+		if (dynamic_cast<MenuButton*>(go))
+		{
+			MenuButton* btn = dynamic_cast<MenuButton*>(go);
+			btn->set_callback(cbcks[btn->get_callback_id()]);
+		}
+	}
 }

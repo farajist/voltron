@@ -1,11 +1,16 @@
 #include "MenuButton.h"
 
-MenuButton::MenuButton(const LoaderParams* p_params, void (*callback)()) :
-SDLGameObject(p_params), m_callback(callback)
+MenuButton::MenuButton() : SDLGameObject()
 {
-	m_curr_frame = MOUSE_OUT;
+	// m_curr_frame = MOUSE_OUT;
 }
 
+void MenuButton::load(const LoaderParams* p_params) 
+{
+	SDLGameObject::load(p_params);
+	this->m_callback_id = p_params->get_callback_id();
+	m_curr_frame = MOUSE_OUT;
+}
 void MenuButton::draw()
 {
 	SDLGameObject::draw();
@@ -27,7 +32,7 @@ void MenuButton::update()
 		if (InputHandler::get_instance()->get_mouse_btn_state(LEFT) && m_breleased)
 		{
 			m_curr_frame = CLICKED;
-
+			std::cout << "here we go" << std::endl;
 			m_callback(); //call to callback func
 			m_breleased = false;
 		}

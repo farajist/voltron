@@ -24,25 +24,14 @@ void PauseState::render()
 bool PauseState::on_enter()
 {
 	
-	if (!TextureMgr::get_instance()->load("assets/resume.png", 
-	"resumebutton", Game::get_instance()->get_renderer()))
-	{
-		return false;
-	}
-	if (!TextureMgr::get_instance()->load("assets/main.png",
-	"mainbutton", Game::get_instance()->get_renderer()))
-	{
-		return false;
-	}
+	StateParser parser;
+	parser.parse_state("test.xml", s_pause_id, &m_game_objects, &m_texture_ids);
+
+	m_callbacks.push_back(0);
+	m_callbacks.push_back(s_pause_to_main);
+	m_callbacks.push_back(s_resume_play);
 	
-	GameObject* btn_resume = new MenuButton(new LoaderParams(200, 100,
-	200, 80, "resumebutton"), PauseState::s_resume_play);
-
-	GameObject* btn_main = new MenuButton(new LoaderParams(200, 200,
-	200, 80, "mainbutton"), PauseState::s_pause_to_main);
-
-	m_game_objects.push_back(btn_resume);
-	m_game_objects.push_back(btn_main);
+	set_callbacks(m_callbacks);
 
 	std::cout << "Entering PauseState\n";
 	return true;
@@ -59,8 +48,8 @@ bool PauseState::on_exit()
 	}
 	m_game_objects.clear();
 	//bullshit right ?
-	TextureMgr::get_instance()->clear_from_texture_map("resumebutton");
-	TextureMgr::get_instance()->clear_from_texture_map("mainbutton");
+	for (auto& ti : m_texture_ids)
+		TextureMgr::get_instance()->clear_from_texture_map(ti);
 
 	std::cout << "Exiting PauseState\n";
 	return true;
@@ -70,10 +59,25 @@ bool PauseState::on_exit()
 
 void PauseState::s_pause_to_main()
 {
-	Game::get_instance()->get_state_machine()->change_state(new MenuState());
+	Game::get_instance()->get_state_machine()->change_state(new MainMenuState());
 }
 
 void PauseState::s_resume_play()
 {
 	Game::get_instance()->get_state_machine()->pop_state();
+}
+
+
+void PauseState::set_callbacks(const std::vector<Callback>& cbcks)
+{
+	//same as always : now in each game state a part
+	for (auto &go : m_game_objects)
+	{
+		//if object is menubutton give a callback
+		if (dynamic_cast<MenuButton*>(go))
+		{
+			MenuButton* btn = dynamic_cast<MenuButton*>(go);
+			btn->set_callback(cbcks[btn->get_callback_id()]);
+		}
+	}
 }

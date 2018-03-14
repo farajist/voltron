@@ -1,34 +1,22 @@
 #ifndef __MENU_STATE__
 #define __MENU_STATE__
 
-#include <iostream>
-#include <string>
 #include <vector>
-
-#include "TextureManager.h"
 #include "GameState.h"
-#include "GameObject.h"
-#include "MenuButton.h"
 
+/**
+ * This class is a super class for all state types
+ * with callbacks !
+ * */
 class MenuState : public GameState
 {
-public:
-	typedef TextureManager TextureMgr;
-	virtual void update();
-	virtual void render();
+protected:
+	typedef void(*Callback)();
 
-	virtual bool on_enter();
-	virtual bool on_exit();
-
-	virtual std::string state_id() const { return s_menu_id; };
-
-private:
-
-	static void s_menu_to_play();
-	static void s_exit_from_menu();
-	static const std::string s_menu_id;
-	std::vector<GameObject*> m_game_objects;
+	virtual void set_callbacks(const std::vector<Callback>&) = 0;
+	
+	std::vector<Callback> m_callbacks;
 };
 
-#include "Game.h"
-#endif /* __MENU_STATE__ */
+
+#endif /* __MAIN_MENU_STATE__ */

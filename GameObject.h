@@ -19,9 +19,12 @@ public:
 	virtual void update();
 	virtual void clean();
 
+	//new load function to avoid passing param to creator
+	virtual void load(const LoaderParams*) = 0;
+
 
 protected:
-	GameObject(const LoaderParams* p_params) {}
+	GameObject() {}
 	virtual ~GameObject() {}
 };
 

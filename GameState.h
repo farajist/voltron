@@ -1,6 +1,7 @@
 #ifndef __GAME_STATE__
 #define __GAME_STATE__
 
+#include <vector>
 #include <string>
 
 class GameState 
@@ -15,6 +16,9 @@ public:
 	virtual std::string state_id() const = 0;
 
 	virtual ~GameState(){}
+
+protected:
+	std::vector<std::string> m_texture_ids;
 
 // protected:
 // 	bool m_exiting;
