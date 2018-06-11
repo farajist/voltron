@@ -40,6 +40,9 @@ bool Game::init(std::string title, int xpos, int ypos, int width,
 	/*Everything succeded successfully */
 	std::cout << "initialization succeeded !\n";
 	
+	m_game_width = width;
+	m_game_height = height;
+	
 	mb_running = true;
 
 	InputHandler::get_instance()->init_joysticks();

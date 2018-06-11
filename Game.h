@@ -39,6 +39,9 @@ public:
 	static Game* get_instance();
 	SDL_Renderer* get_renderer() const { return mp_renderer; }
 	GameStateMachine* get_state_machine() {return m_pgame_state_machine; }
+
+	int get_width() const {return m_game_width;}
+	int get_height() const {return m_game_height;} 
 private:
 	//singleton matters
 	Game() : mp_window(NULL), mp_renderer(NULL), mb_running(false){}
@@ -47,18 +50,12 @@ private:
 	SDL_Window* mp_window;
 	SDL_Renderer* mp_renderer;
 
-	// GameObject m_go;
-	// Player m_player;
-
 	GameStateMachine* m_pgame_state_machine;
-	// std::vector<GameObject*> m_game_objects;
-
-	// GameObject* m_player;
-	// GameObject* m_go;
-	// GameObject* m_en;
 
 
 	int m_current_frame;
 	bool mb_running;
+	int m_game_width;
+	int m_game_height;
 };
 #endif /*__GAME__*/

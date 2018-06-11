@@ -12,6 +12,9 @@
 #include "GameOverState.h"
 #include "TextureManager.h"
 
+#include "Level.h"
+#include "LevelParser.h"
+
 class PlayState : public GameState
 {
 public:
@@ -29,6 +32,8 @@ private:
 	static const std::string s_play_id;
 	bool check_collision(SDLGameObject*, SDLGameObject*);
 	std::vector<GameObject*> m_game_objects;
+
+	Level* p_level;
 };
 
 #include "Game.h"

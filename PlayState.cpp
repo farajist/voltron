@@ -4,33 +4,42 @@ const std::string PlayState::s_play_id = "PLAY";
 
 void PlayState::update()
 {
-	if (InputHandler::get_instance()->is_key_down(SDL_SCANCODE_ESCAPE))
-	{
-		Game::get_instance()->get_state_machine()->push_state(new PauseState());
-	}
-	for (auto &go : m_game_objects)
-	{
-		go->update();
-	}
+	// if (InputHandler::get_instance()->is_key_down(SDL_SCANCODE_ESCAPE))
+	// {
+	// 	Game::get_instance()->get_state_machine()->push_state(new PauseState());
+	// }
+	// for (auto &go : m_game_objects)
+	// {
+	// 	go->update();
+	// }
 
-	if (check_collision(dynamic_cast<SDLGameObject*>(m_game_objects[0]),
-	dynamic_cast<SDLGameObject*>(m_game_objects[1])))
-	{
-		Game::get_instance()->get_state_machine()->push_state(new GameOverState());
-	}
+	// if (check_collision(dynamic_cast<SDLGameObject*>(m_game_objects[0]),
+	// dynamic_cast<SDLGameObject*>(m_game_objects[1])))
+	// {
+	// 	Game::get_instance()->get_state_machine()->push_state(new GameOverState());
+	// }
 }
 
 void PlayState::render()
 {
-	for (auto &go : m_game_objects)
-		go->draw();
+	// for (auto &go : m_game_objects)
+		// go->draw();
+
+		p_level->render();
 }
 
 bool PlayState::on_enter()
 {
-	StateParser parser;
-	parser.parse_state("test.xml", s_play_id, &m_game_objects, &m_texture_ids);
+	// StateParser parser;
+	// parser.parse_state("test.xml", s_play_id, &m_game_objects, &m_texture_ids);
+	LevelParser parser;
+	p_level = parser.parse_level("assets/map.tmx");
 
+	std::cout << "Level parsed, we have " << p_level->get_layers()->size() << " layers now !" <<std::endl;
+	std::cout << "Tileset gids are : " <<std::endl;
+	for (auto& ts : *(p_level->get_tilesets()))
+		std::cout << ts.first_gid << " ";
+	std::cout << std::endl;
 	std::cout << "Entering PlayState\n";
 	return true;
 }

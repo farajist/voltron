@@ -81,3 +81,22 @@ void TextureManager::clear_from_texture_map(std::string id)
 {
 	m_texture_map.erase(id);
 }
+
+void TextureManager::draw_tile(std::string name, int margin, int spacing, int x, int y,
+		int width, int height, int curr_row, int curr_frame, 
+		SDL_Renderer* p_renderer)
+{
+	SDL_Rect src_rect;
+	SDL_Rect dest_rect;
+
+	src_rect.x = margin + (spacing + width) * curr_frame;
+	src_rect.y = margin + (spacing + height) * curr_row;
+	src_rect.w = dest_rect.w = width;
+	src_rect.h = dest_rect.h = height;
+	dest_rect.x = x;
+	dest_rect.y = y;
+
+	SDL_RenderCopyEx(p_renderer, m_texture_map[name], &src_rect,
+		&dest_rect, 0, 0, SDL_FLIP_NONE);
+
+}

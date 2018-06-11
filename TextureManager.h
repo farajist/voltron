@@ -20,6 +20,11 @@ public:
 		int curr_row, int curr_frame, SDL_Renderer *p_renderer, 
 		SDL_RendererFlip flip = SDL_FLIP_NONE);
 
+
+	void draw_tile(std::string name, int margin, int spacing, int x, int y,
+	 	int width, int height, int curr_row, int curr_frame, 
+		SDL_Renderer* p_renderer);
+		
 	void clear_from_texture_map(std::string id);
 	static TextureManager* get_instance();
 private:
