@@ -9,21 +9,24 @@ bool StateParser::parse_state(const char* state_file, std::string state_id,
 	//loading state file
 	if (!xmlDoc.LoadFile("test.xml"))
 	{
-		std::cerr << xmlDoc.ErrorDesc() << std::endl;
+		std::cout << xmlDoc.ErrorDesc() << std::endl;
 		return false;
 	}
-
+	xmlDoc.Print();
 	std::cout << state_file << " loaded successfully !" << std::endl;
 	
 	TiXmlElement *p_root = xmlDoc.RootElement();
-	
+
+	if (p_root == nullptr) 
+		std::cout << "root non-allowed value !" << std::endl;
 	// TiXmlNode* child = 0;
 	// while((child = p_root->IterateChildren( child ))){
 	// 	std::cout << child->ValueStr() << std::endl;
 	// }
 	//pre declare state root node
 	TiXmlElement *p_state_root = 0;
-	std::cout << "Parsing state ..." << std::endl;
+	std::cout << "Parsing state with ID : " << state_id << std::endl;
+	
 	//get state root node and assign it to p_state_root
 	for (TiXmlElement* e = p_root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
 	{
@@ -37,6 +40,9 @@ bool StateParser::parse_state(const char* state_file, std::string state_id,
 	std::cout << "State " << state_id << " parsed successfully !!" << std::endl;
 
 	std::cout << "Parsing textures ..." << std::endl;
+
+	if (p_state_root == nullptr) 
+		std::cout << "state root non-allowed value !" << std::endl;
 	//pre declate texture 
 	TiXmlElement *p_textures_root = 0;
 	
