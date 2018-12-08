@@ -4,11 +4,16 @@ TextureManager* TextureManager::sp_instance = nullptr;
 
 bool TextureManager::load(std::string filename, std::string id, SDL_Renderer* p_renderer)
 {
+	std::cout << "loading texture ... " << id << std::endl;
 	SDL_Surface *p_temp_surface = IMG_Load(filename.c_str());
 
 	//surface failed to load
-	if (p_temp_surface == NULL) 
+	if (p_temp_surface == NULL) {
+		std::cout << "Failed loading surface : " << id << std::endl;
+		std::cout << SDL_GetError() << std::endl;
 		return false;
+	}
+		
 
 	SDL_Texture *p_texture = SDL_CreateTextureFromSurface(p_renderer, p_temp_surface);
 	SDL_FreeSurface(p_temp_surface);
@@ -17,9 +22,12 @@ bool TextureManager::load(std::string filename, std::string id, SDL_Renderer* p_
 	if (p_texture != NULL)
 	{
 		m_texture_map[id] = p_texture;
+		std::cout << "Texture " << id << " loaded" << std::endl;
 		return true;
 	}
 
+	std::cout << "Failed loading texture : " << id << std::endl;
+	std::cout << SDL_GetError() << std::endl;
 	//something went wrong
 	return false;
 }

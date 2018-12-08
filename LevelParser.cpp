@@ -3,59 +3,67 @@
 
 Level* LevelParser::parse_level(const char* level_file)
 {
-	TiXmlDocument level_doc;
+	tinyxml2::XMLDocument level_doc;
 	level_doc.LoadFile(level_file);
 
 	//create the level object
 	Level* p_level = new Level(); //_-_
 
 	//get root node
-	TiXmlElement* p_root = level_doc.RootElement();
+	tinyxml2::XMLElement* p_root = level_doc.RootElement();
 
-	p_root->Attribute("tilewidth", &m_tile_size);
-	p_root->Attribute("width", &m_width);
-	p_root->Attribute("height", &m_height);
+	m_tile_size = p_root->IntAttribute("tilewidth");
+	m_width = p_root->IntAttribute("width");
+	m_height = p_root->IntAttribute("height");
 
 	//parse the tilesets
-	for (TiXmlElement* e = p_root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+	for (tinyxml2::XMLElement* e = p_root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
 	{
-		if (e->ValueStr() == std::string("tileset"))
+		if (!std::strcmp(e->Name(), "tileset")){
+			std::cout << "found tileset" << std::endl;
 			parse_tilesets(e, p_level->get_tilesets());
+
+		}
+			
 	}
 
-
 	//parse any object layers
-	for (TiXmlElement* e = p_root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+	for (tinyxml2::XMLElement* e = p_root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
 	{
-		if (e->ValueStr() == std::string("layer"))
+		if (!std::strcmp(e->Name(), "layer"))
 			parse_tile_layer(e, p_level->get_layers(), p_level->get_tilesets());
 	}
 
 	return p_level;
 }
 
-void LevelParser::parse_tilesets(TiXmlElement* ts_root, std::vector<Tileset>* p_tilesets)
+void LevelParser::parse_tilesets(tinyxml2::XMLElement* ts_root, std::vector<Tileset>* p_tilesets)
 {
 	//add tileset to texture manager
+	std::cout << "image path found is " << ts_root->FirstChildElement()->Attribute("source") << std::endl;
 	TextureMgr::get_instance()->load(ts_root->FirstChildElement()->Attribute("source"), ts_root->Attribute("name"),
 		Game::get_instance()->get_renderer());
-
+		// std::cout << "parsed image width found is " << ts_root->FirstChildElement()->IntAttribute("width") << std::endl;
+		// std::cout << "parsed image height found is " << ts_root->FirstChildElement()->IntAttribute("height") << std::endl;
+		// std::cout << "tilewidth found is " << ts_root->IntAttribute("tilewidth") << std::endl;
+		// std::cout << "tileheight found is " << ts_root->IntAttribute("tileheight") << std::endl;
 		//create a tileset object
 		Tileset tileset;
-		ts_root->FirstChildElement()->Attribute("width", &tileset.width);
-		ts_root->FirstChildElement()->Attribute("height", &tileset.height);
-		ts_root->Attribute("firstgid", &tileset.first_gid);
-		ts_root->Attribute("tilewidth", &tileset.width);
-		ts_root->Attribute("tileheight", &tileset.height);
-		ts_root->Attribute("spacing", &tileset.spacing);
-		ts_root->Attribute("margin", &tileset.margin);
+		tileset.width = ts_root->FirstChildElement()->IntAttribute("width");
+		tileset.height = ts_root->FirstChildElement()->IntAttribute("height");
+		tileset.first_gid = ts_root->IntAttribute("firstgid");
+		tileset.tile_width = ts_root->IntAttribute("tilewidth");
+		tileset.tile_height = ts_root->IntAttribute("tileheight");
+		tileset.spacing = ts_root->IntAttribute("spacing");
+		tileset.margin = ts_root->IntAttribute("margin");
 		tileset.name = ts_root->Attribute("name");
 
+		std::cout << "Parsed one tileset, width is " << tileset.tile_width << " spacing|margin is : " << tileset.spacing << "|" << tileset.margin << std::endl; 
 		tileset.num_cols = tileset.width / (tileset.tile_width + tileset.spacing);
 		p_tilesets->push_back(tileset);
 }
 
-void LevelParser::parse_tile_layer(TiXmlElement* p_tile_elt, std::vector<Layer*>* p_layers,
+void LevelParser::parse_tile_layer(tinyxml2::XMLElement* p_tile_elt, std::vector<Layer*>* p_layers,
 		const std::vector<Tileset>* p_tilesets)
 {
 	TileLayer* p_tile_layer = new TileLayer(m_tile_size, *p_tilesets);
@@ -63,20 +71,29 @@ void LevelParser::parse_tile_layer(TiXmlElement* p_tile_elt, std::vector<Layer*>
 	//tile data 
 	std::vector<std::vector<int>> data;
 	std::string decoded_ids;
-	TiXmlElement *p_data_node;
-
-	for (TiXmlElement* e = p_tile_elt->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+	tinyxml2::XMLElement *p_data_node;
+	std::cout << "Commencing TileLayer parsing " << std::endl;
+	for (tinyxml2::XMLElement* e = p_tile_elt->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
 	{
-		if (e->ValueStr() == std::string("data"))
+		if (!std::strcmp(e->Name(), "data")){
 			p_data_node = e;
+			// std::cout << "Found data node " << std::endl;
+		}
+			
 	}
 
-	for (TiXmlNode* e = p_data_node->FirstChild(); e != NULL; e = e->NextSiblingElement())
-	{
-		TiXmlText* text = e->ToText();
-		std::string t = text->ValueStr();
+	//FIXME: why the loop ??
+	// for (tinyxml2::XMLElement* e = p_data_node->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+	// {
+		// tinyxml2::XMLText* text = e->ToText();
+		// std::cout << "inside a for loop" << std::endl;
+		std::string t = std::string(p_data_node->GetText());
+		// std::cout << "data node has content " << t << " size is " << t.size() << std::endl;
 		decoded_ids = base64_decode(t);
-	}
+		// std::cout << "d3coded " << decoded_ids << std::endl;
+	// }
+
+	// std::cout << "width : " << m_width << " height : " << m_height << std::endl; 
 
 	//uncompress zlib compression
 	uLongf num_gids = m_width * m_height * sizeof(int);
@@ -95,8 +112,11 @@ void LevelParser::parse_tile_layer(TiXmlElement* p_tile_elt, std::vector<Layer*>
 	//strategy : fill matrix from array 
 	for (int rows = 0; rows < m_height; ++rows)
 	{
-		for (int cols = 0; cols < m_width; ++cols)
+		for (int cols = 0; cols < m_width; ++cols){
 			data[rows][cols] = gids[rows*m_width + cols];
+			// std::cout << " gids : " << gids[rows*m_width + cols];
+		}
+			
 	}
 
 	//data now contains tile ids for the layer

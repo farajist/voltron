@@ -31,10 +31,11 @@ void TileLayer::render()
 		for (int j = 0; j < m_num_cols; ++j)
 		{
 			//get the id of the tiles starting a's value to the right
-			int id = m_tile_ids[i][j + a];
+			int id = m_tile_ids[i + b][j + a];
 			if (id == 0)
 				continue;
 			Tileset tileset = get_tileset_by_id(id);
+			// std::cout << "tileset data fgid: " << tileset.first_gid << " ncols : " << tileset.num_cols << std::endl;
 			id--; //WHY ???? need a full scenario
 			//params 2 and 3 are for spacing and margin
 			//params 4 and 5 are the x and y for dest rect :
@@ -45,7 +46,11 @@ void TileLayer::render()
 			// and i have an exam tomorrow => it gives you row and col in that picture of blocks
 			// those are the curr_row/curr_frame needed by the tmgr's draw_tile
 			//finally the renderer
-			TextureMgr::get_instance()->draw_tile(tileset.name, 2, 2, 
+
+			// std::cout << "X Position to draw " << (id - (tileset.first_gid - 1)) / tileset.num_cols << std::endl;
+			// std::cout << "Y Position to draw " << (id - (tileset.first_gid - 1)) % tileset.num_cols << std::endl;
+
+			TextureMgr::get_instance()->draw_tile(tileset.name, tileset.margin, tileset.spacing, 
 			(j * m_tile_size) - x, (i * m_tile_size) - y, m_tile_size,
 			m_tile_size, (id - (tileset.first_gid - 1)) / tileset.num_cols,
 			(id - (tileset.first_gid - 1)) % tileset.num_cols,

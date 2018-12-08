@@ -4,7 +4,7 @@
 #include<iostream>
 #include<vector>
 #include<string>
-#include<tinyxml.h>
+#include<tinyxml2.h>
 
 #include "Game.h"
 #include "TextureManager.h"
@@ -18,8 +18,8 @@ public:
 	bool parse_state(const char* state_file, std::string state_id,
 		std::vector<GameObject*> *, std::vector<std::string> *);
 private:
-	void parse_objects(TiXmlElement*, std::vector<GameObject*> *);
-	void parse_textures(TiXmlElement*, std::vector<std::string> *);
+	void parse_objects(tinyxml2::XMLElement*, std::vector<GameObject*> *);
+	void parse_textures(tinyxml2::XMLElement*, std::vector<std::string> *);
 };
 
 #endif /* __STATE_PARSER_H__ */

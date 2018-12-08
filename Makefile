@@ -8,7 +8,7 @@ CC = g++
 INCLUDE_PATHS = `sdl2-config --cflags`
 
 #LIBRARY_PATHS : addtional library paths needed
-LIBRARY_PATHS = `sdl2-config --libs` -ltinyxml -lz
+LIBRARY_PATHS = `sdl2-config --libs` -ltinyxml2 -ltinyxml -lz
 
 
 #COMPILER_FLAGS

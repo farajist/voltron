@@ -18,6 +18,8 @@ void PlayState::update()
 	// {
 	// 	Game::get_instance()->get_state_machine()->push_state(new GameOverState());
 	// }
+
+	p_level->update();
 }
 
 void PlayState::render()
@@ -33,7 +35,7 @@ bool PlayState::on_enter()
 	// StateParser parser;
 	// parser.parse_state("test.xml", s_play_id, &m_game_objects, &m_texture_ids);
 	LevelParser parser;
-	p_level = parser.parse_level("assets/map.tmx");
+	p_level = parser.parse_level("map1.tmx");
 
 	std::cout << "Level parsed, we have " << p_level->get_layers()->size() << " layers now !" <<std::endl;
 	std::cout << "Tileset gids are : " <<std::endl;
