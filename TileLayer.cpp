@@ -18,17 +18,17 @@ void TileLayer::render()
 	// get me the coordinates of the position 
 	// tile-wise, returns coordinates of the tile
 	// a float that is trumcated
-	a = m_pos.get_x() / m_tile_size;
+	//HACK: % m_num_cols did it !!!
+	a = int(m_pos.get_x() / m_tile_size) % m_num_cols;
 	b = m_pos.get_y() / m_tile_size;
 
 	//we get the truncated part into x and y => always 0
 	x = int(m_pos.get_x()) % m_tile_size;
 	y = int(m_pos.get_y()) % m_tile_size;
-
 	//for each row and each column
-	for (int i = 0; i < m_num_rows; ++i)
+	for (int i = 0; i < m_num_rows; i++)
 	{
-		for (int j = 0; j < m_num_cols; ++j)
+		for (int j = 0; j < m_num_cols; j++)
 		{
 			//get the id of the tiles starting a's value to the right
 			int id = m_tile_ids[i + b][j + a];
@@ -47,9 +47,6 @@ void TileLayer::render()
 			// those are the curr_row/curr_frame needed by the tmgr's draw_tile
 			//finally the renderer
 
-			// std::cout << "X Position to draw " << (id - (tileset.first_gid - 1)) / tileset.num_cols << std::endl;
-			// std::cout << "Y Position to draw " << (id - (tileset.first_gid - 1)) % tileset.num_cols << std::endl;
-
 			TextureMgr::get_instance()->draw_tile(tileset.name, tileset.margin, tileset.spacing, 
 			(j * m_tile_size) - x, (i * m_tile_size) - y, m_tile_size,
 			m_tile_size, (id - (tileset.first_gid - 1)) / tileset.num_cols,
@@ -62,6 +59,7 @@ void TileLayer::render()
 void TileLayer::update()
 {
 	m_pos += m_vel;
+	m_vel.set_x(2);
 }
 
 void TileLayer::set_tile_ids(std::vector<std::vector<int>>& data)
@@ -75,7 +73,7 @@ void TileLayer::set_tile_size(int tile_size)
 
 Tileset TileLayer::get_tileset_by_id(int id)
 {
-	for (int i = 0; i < m_tilesets.size(); ++i)
+	for (std::size_t i = 0; i < m_tilesets.size(); ++i)
 	{
 		if (i + 1 <= m_tilesets.size() -1)
 		{

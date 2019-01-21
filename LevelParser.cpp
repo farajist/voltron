@@ -58,8 +58,11 @@ void LevelParser::parse_tilesets(tinyxml2::XMLElement* ts_root, std::vector<Tile
 		tileset.margin = ts_root->IntAttribute("margin");
 		tileset.name = ts_root->Attribute("name");
 
-		std::cout << "Parsed one tileset, width is " << tileset.tile_width << " spacing|margin is : " << tileset.spacing << "|" << tileset.margin << std::endl; 
+		std::cout << "width :" << tileset.width << std::endl; 
+		std::cout << "spacing|margin : " << tileset.spacing << "|" << tileset.margin << std::endl;
+		std::cout << "tile_width :" << tileset.tile_width << std::endl; 
 		tileset.num_cols = tileset.width / (tileset.tile_width + tileset.spacing);
+		std::cout << "num_cols :" << tileset.num_cols << std::endl; 
 		p_tilesets->push_back(tileset);
 }
 
@@ -117,6 +120,14 @@ void LevelParser::parse_tile_layer(tinyxml2::XMLElement* p_tile_elt, std::vector
 			// std::cout << " gids : " << gids[rows*m_width + cols];
 		}
 			
+	}
+
+	for (int rows = 0; rows < m_height; ++rows)
+	{
+		for (int cols = 0; cols < m_width; ++cols){
+			std::cout << data[rows][cols] << " "; 
+		}
+		std::cout << std::endl;
 	}
 
 	//data now contains tile ids for the layer

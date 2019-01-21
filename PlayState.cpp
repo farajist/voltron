@@ -35,7 +35,7 @@ bool PlayState::on_enter()
 	// StateParser parser;
 	// parser.parse_state("test.xml", s_play_id, &m_game_objects, &m_texture_ids);
 	LevelParser parser;
-	p_level = parser.parse_level("map1.tmx");
+	p_level = parser.parse_level("map_ex.tmx");
 
 	std::cout << "Level parsed, we have " << p_level->get_layers()->size() << " layers now !" <<std::endl;
 	std::cout << "Tileset gids are : " <<std::endl;
