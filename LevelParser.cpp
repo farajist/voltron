@@ -3,7 +3,8 @@
 
 Level* LevelParser::parse_level(const char* level_file)
 {
-	tinyxml2::XMLDocument level_doc;
+	tinyxml2::XMLDocument level_doc(true, tinyxml2::COLLAPSE_WHITESPACE);
+	
 	level_doc.LoadFile(level_file);
 
 	//create the level object
@@ -16,6 +17,18 @@ Level* LevelParser::parse_level(const char* level_file)
 	m_width = p_root->IntAttribute("width");
 	m_height = p_root->IntAttribute("height");
 
+	//parse textures embedded inside the "properties" that's the first child of root
+	//TODO: refactor .. just find optimal way
+	tinyxml2::XMLElement* p_props = p_root->FirstChildElement();
+	for (tinyxml2::XMLElement* e = p_props->FirstChildElement(); e != NULL; e = e->NextSiblingElement()) 
+	{
+		if (!std::strcmp(e->Name(), "property"))
+		{
+			parse_textures(e);
+		}
+	}
+	std::cout << "map texture have been successfully loaded !" << std::endl;
+	
 	//parse the tilesets
 	for (tinyxml2::XMLElement* e = p_root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
 	{
@@ -30,8 +43,18 @@ Level* LevelParser::parse_level(const char* level_file)
 	//parse any object layers
 	for (tinyxml2::XMLElement* e = p_root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
 	{
-		if (!std::strcmp(e->Name(), "layer"))
-			parse_tile_layer(e, p_level->get_layers(), p_level->get_tilesets());
+		if (!std::strcmp(e->Name(), "layer") || !std::strcmp(e->Name(), "objectgroup"))
+		{
+			if (!std::strcmp(e->FirstChildElement()->Name(), "object"))
+			{
+				std::cout << "Found an object to parse !" << std::endl;
+				parse_object_layer(e, p_level->get_layers());
+			} 
+			else if (!std::strcmp(e->FirstChildElement()->Name(), "data"))
+			{
+				parse_tile_layer(e, p_level->get_layers(), p_level->get_tilesets());
+			}
+		}
 	}
 
 	return p_level;
@@ -86,16 +109,17 @@ void LevelParser::parse_tile_layer(tinyxml2::XMLElement* p_tile_elt, std::vector
 	}
 
 	//FIXME: why the loop ??
-	// for (tinyxml2::XMLElement* e = p_data_node->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
-	// {
-		// tinyxml2::XMLText* text = e->ToText();
-		// std::cout << "inside a for loop" << std::endl;
+	//TODO: I guess there should really be a loop to avoid reading an empty string 
+	for (tinyxml2::XMLNode* e = p_data_node->FirstChild(); e != NULL; e = e->NextSibling())
+	{
+		tinyxml2::XMLText* text = e->ToText();
+		std::cout << "inside a for loop" << std::endl;
 		std::string t = std::string(p_data_node->GetText());
-		// std::cout << "data node has content " << t << " size is " << t.size() << std::endl;
+		std::cout << "data node has content " << t << " size is " << t.size() << std::endl;
 		decoded_ids = base64_decode(t);
-		// std::cout << "d3coded " << decoded_ids << std::endl;
-	// }
-
+		std::cout << "d3coded " << decoded_ids << std::endl;
+	}
+		
 	// std::cout << "width : " << m_width << " height : " << m_height << std::endl; 
 
 	//uncompress zlib compression
@@ -122,15 +146,97 @@ void LevelParser::parse_tile_layer(tinyxml2::XMLElement* p_tile_elt, std::vector
 			
 	}
 
-	for (int rows = 0; rows < m_height; ++rows)
-	{
-		for (int cols = 0; cols < m_width; ++cols){
-			std::cout << data[rows][cols] << " "; 
-		}
-		std::cout << std::endl;
-	}
+	// for (int rows = 0; rows < m_height; ++rows)
+	// {
+	// 	for (int cols = 0; cols < m_width; ++cols){
+	// 		std::cout << data[rows][cols] << " "; 
+	// 	}
+	// 	std::cout << std::endl;
+	// }
 
 	//data now contains tile ids for the layer
 	p_tile_layer->set_tile_ids(data);
 	p_layers->push_back(p_tile_layer);
+}
+
+void LevelParser::parse_textures(tinyxml2::XMLElement* p_prop) 
+{
+	TextureMgr::get_instance()->load(p_prop->Attribute("value"),
+	p_prop->Attribute("name"), Game::get_instance()->get_renderer());
+}
+
+void LevelParser::parse_object_layer(tinyxml2::XMLElement *p_object_element, std::vector<Layer*>* p_layers)
+{
+	//create an object layer
+	ObjectLayer* p_object_layer = new ObjectLayer();
+
+	std::cout << p_object_element->FirstChildElement()->Name() << std::endl;	
+
+	for (tinyxml2::XMLElement* e = p_object_element->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+	{
+		std::cout << e->Name();
+		std::cout << e;
+		if (!std::strcmp(e->Name(), "object"))
+		{
+			std::cout << "commencing object parsing " << std::endl;
+			int x, y, width, height, num_frames, callback_id, anim_speed;
+			std::string texture_id;
+
+			//get the initial node values
+			x = e->IntAttribute("x");
+			y = e->IntAttribute("y");
+			std::cout << "x|y : " << x << y << std::endl;  
+			GameObject* p_game_object = GameObjectFactory::get_instance()->create(e->Attribute("type"));
+			std::cout << "parsing rest of the props : " << std::endl;  
+			//get prop values
+			for (tinyxml2::XMLElement* props = e->FirstChildElement(); props != NULL; props = props->NextSiblingElement())
+			{
+				if (!std::strcmp(props->Name(), "properties")) 
+				{
+					std::cout << "props detected : " << std::endl;  
+					// NOTE: prop wasn't assigned in the increment part of the next loop => cause 
+					for (tinyxml2::XMLElement* prop = props->FirstChildElement(); prop != NULL; prop = prop->NextSiblingElement())
+					{
+						if (!std::strcmp(prop->Name(), "property"))
+						{
+							std::cout << "prop detected : " << std::endl; 
+							if (!std::strcmp(prop->Attribute("name"), "num_frames"))
+							{
+								num_frames = prop->IntAttribute("value");
+								std::cout << "num_frames : " << num_frames << std::endl; 
+							}
+							else if (!std::strcmp(prop->Attribute("name"), "texture_height"))
+							{
+								height = prop->IntAttribute("value");
+							}
+							else if (!std::strcmp(prop->Attribute("name"), "texture_width"))
+							{
+								width = prop->IntAttribute("value");
+							}
+							else if (!std::strcmp(prop->Attribute("name"), "texture_id"))
+							{
+								texture_id = prop->Attribute("value");
+							}
+							else if (!std::strcmp(prop->Attribute("name"), "callback_id"))
+							{
+								callback_id = prop->IntAttribute("value");
+							}
+							else if (!std::strcmp(prop->Attribute("name"), "anim_speed"))
+							{
+								anim_speed = prop->IntAttribute("value");
+							}
+						}
+					}
+				}
+			}
+			std::cout << "width|height : " << width << height << std::endl;  
+			std::cout << "texture_id|num_frames|callback_id : " << texture_id << num_frames << callback_id << height << std::endl;
+			p_game_object->load(new LoaderParams(x, y, width, height, texture_id, num_frames, 
+			callback_id, anim_speed));
+			p_object_layer->get_game_objects()->push_back(p_game_object);
+		}
+	}
+	std::cout << "object parsing complete" << std::endl;
+	p_layers->push_back(p_object_layer);
+	std::cout << "object parsing complete" << std::endl;
 }

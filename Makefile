@@ -1,5 +1,5 @@
 #OBJS : file to compile as part of the project
-OBJS = base64.cpp TextureManager.cpp Vector2D.cpp Layer.cpp Level.cpp LevelParser.cpp TileLayer.cpp LoaderParams.cpp GameObject.cpp StateParser.cpp GameObjectFactory.cpp SDLGameObject.cpp Player.cpp Enemy.cpp AnimatedGraphic.cpp MenuButton.cpp InputHandler.cpp GameStateMachine.cpp GameState.cpp MenuState.cpp PauseState.cpp PlayState.cpp MainMenuState.cpp GameOverState.cpp Game.cpp main.cpp
+OBJS = base64.cpp TextureManager.cpp Vector2D.cpp Layer.cpp Level.cpp LevelParser.cpp TileLayer.cpp ObjectLayer.cpp LoaderParams.cpp GameObject.cpp StateParser.cpp GameObjectFactory.cpp SDLGameObject.cpp Player.cpp Enemy.cpp AnimatedGraphic.cpp MenuButton.cpp InputHandler.cpp GameStateMachine.cpp GameState.cpp MenuState.cpp PauseState.cpp PlayState.cpp MainMenuState.cpp GameOverState.cpp Game.cpp main.cpp
 
 #CC compiler to be used
 CC = g++
