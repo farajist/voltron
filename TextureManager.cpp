@@ -57,7 +57,7 @@ void TextureManager::draw(std::string id, int x, int y, int width, int height,
 //draw frame : additional params, current frame to draw and its row in the ss
 void TextureManager::draw_frame(std::string id, int x, int y, int width, int height,
 		int curr_row, int curr_frame, SDL_Renderer *p_renderer, 
-		SDL_RendererFlip flip)
+		double angle, int alpha, SDL_RendererFlip flip)
 {
 	//reaaaaaaallllly needs a private function to leverage work in draw/draw_frame
 
@@ -73,7 +73,8 @@ void TextureManager::draw_frame(std::string id, int x, int y, int width, int hei
 	dest_rect.x = x;
 	dest_rect.y = y;
 
-	SDL_RenderCopyEx(p_renderer, m_texture_map[id], &src_rect, &dest_rect, 0, 0, flip);	
+	SDL_SetTextureAlphaMod(m_texture_map[id], alpha);
+	SDL_RenderCopyEx(p_renderer, m_texture_map[id], &src_rect, &dest_rect, angle, 0, flip);	
 }
 
 TextureManager* TextureManager::get_instance() {

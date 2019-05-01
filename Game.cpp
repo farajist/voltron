@@ -1,5 +1,23 @@
 #include "Game.h"
 
+#include "TextureManager.h"
+#include "InputHandler.h"
+#include "MainMenuState.h"
+#include "GameObjectFactory.h"
+#include "MenuButton.h"
+#include "AnimatedGraphic.h"
+#include "Player.h"
+#include "ScrollingBackground.h"
+#include "SoundManager.h"
+// #include "RoofTurret.h"
+// #include "ShotGlider.h"
+// #include "Eskeletor.h"
+// #include "Level1Boss.h"
+#include "GameOverState.h"
+#include <iostream>
+
+typedef TextureManager TextureMgr;
+
 Game* Game::sp_instance = nullptr;
 
 bool Game::init(std::string title, int xpos, int ypos, int width,
@@ -51,7 +69,7 @@ bool Game::init(std::string title, int xpos, int ypos, int width,
 	GameObjectFactory::get_instance()->register_type("MenuButton", new MenuButtonCreator());
 	GameObjectFactory::get_instance()->register_type("AnimatedGraphic", new AnimatedGraphicCreator());
 	GameObjectFactory::get_instance()->register_type("Player", new PlayerCreator());
-	GameObjectFactory::get_instance()->register_type("Enemy", new EnemyCreator());
+	// GameObjectFactory::get_instance()->register_type("Enemy", new EnemyCreator());
 
 
 	m_pgame_state_machine = new GameStateMachine();
@@ -88,8 +106,6 @@ void Game::update()
 void Game::handle_events()
 {
 	InputHandler::get_instance()->update();
-	if (InputHandler::get_instance()->is_key_down(SDL_SCANCODE_RETURN))
-		m_pgame_state_machine->change_state(new PlayState());
 }
 
 
@@ -115,4 +131,12 @@ Game* Game::get_instance()
 void Game::quit() 
 {
 	SDL_Quit();
+}
+
+
+void Game::set_current_level(int current_level)
+{
+	m_current_level = current_level;
+	m_pgame_state_machine->change_state(new GameOverState());
+	mb_level_complete = false;
 }

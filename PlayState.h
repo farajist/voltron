@@ -6,14 +6,12 @@
 #include <vector>
 
 #include "GameState.h"
-#include "GameObject.h"
-#include "SDLGameObject.h"
-#include "PauseState.h"
-#include "GameOverState.h"
-#include "TextureManager.h"
-
 #include "Level.h"
-#include "LevelParser.h"
+#include "CollisionManager.h"
+
+
+class GameObject;
+class Level;
 
 class PlayState : public GameState
 {
@@ -30,7 +28,7 @@ public:
 
 private:
 	static const std::string s_play_id;
-	bool check_collision(SDLGameObject*, SDLGameObject*);
+	bool check_collision(ShooterObject*, ShooterObject*);
 	std::vector<GameObject*> m_game_objects;
 
 	Level* p_level;

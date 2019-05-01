@@ -1,4 +1,11 @@
 #include "PlayState.h"
+#include "GameOverState.h"
+#include "PauseState.h"
+#include "Game.h"
+#include "InputHandler.h"
+#include "LevelParser.h"
+#include "Level.h"
+#include "BulletHandler.h"
 
 const std::string PlayState::s_play_id = "PLAY";
 
@@ -13,8 +20,8 @@ void PlayState::update()
 	// 	go->update();
 	// }
 
-	// if (check_collision(dynamic_cast<SDLGameObject*>(m_game_objects[0]),
-	// dynamic_cast<SDLGameObject*>(m_game_objects[1])))
+	// if (check_collision(dynamic_cast<ShooterObject*>(m_game_objects[0]),
+	// dynamic_cast<ShooterObject*>(m_game_objects[1])))
 	// {
 	// 	Game::get_instance()->get_state_machine()->push_state(new GameOverState());
 	// }
@@ -63,7 +70,7 @@ bool PlayState::on_exit()
 	return true;
 }
 
-bool PlayState::check_collision(SDLGameObject* a, SDLGameObject* b)
+bool PlayState::check_collision(ShooterObject* a, ShooterObject* b)
 {
 	int left_a, left_b;
 	int right_a, right_b;
@@ -71,16 +78,16 @@ bool PlayState::check_collision(SDLGameObject* a, SDLGameObject* b)
 	int bottom_a, bottom_b;
 
 
-	left_a = a->get_pos().get_x();
-	right_a = a->get_pos().get_x() + a->get_width();
-	top_a = a->get_pos().get_y();
-	bottom_a = a->get_pos().get_y() + a->get_height();
+	left_a = a->get_position().get_x();
+	right_a = a->get_position().get_x() + a->get_width();
+	top_a = a->get_position().get_y();
+	bottom_a = a->get_position().get_y() + a->get_height();
 
 	//sides of object b,
-	left_b = b->get_pos().get_x();
-	right_b = b->get_pos().get_x() + b->get_width();
-	top_b = b->get_pos().get_y();
-	bottom_b = b->get_pos().get_y() + b->get_height();
+	left_b = b->get_position().get_x();
+	right_b = b->get_position().get_x() + b->get_width();
+	top_b = b->get_position().get_y();
+	bottom_b = b->get_position().get_y() + b->get_height();
 
 	// std::cout << left_a << " " << right_a << " " << top_a << " " << bottom_a << std::endl; 
 	// std::cout << left_b << " " << right_b << " " << top_b << " " << bottom_b << std::endl;

@@ -1,10 +1,11 @@
 #ifndef __ANIMATED_GRAPHIC__
 #define __ANIMATED_GRAPHIC__
 
-#include "SDLGameObject.h"
+#include "ShooterObject.h"
 #include "LoaderParams.h"
+#include "GameObjectFactory.h"
 
-class AnimatedGraphic : public SDLGameObject
+class AnimatedGraphic : public ShooterObject
 {
 public:
 
@@ -13,7 +14,7 @@ public:
 	void update();
 	void clean();
 
-	virtual void load(const LoaderParams*);
+	virtual void load(std::unique_ptr<LoaderParams> const&);
 
 private:
 	int m_anim_speed;

@@ -18,7 +18,7 @@ public:
 	//draw frame : additional params, current frame to draw and its row in the ss
 	void draw_frame(std::string, int x, int y, int width, int height,
 		int curr_row, int curr_frame, SDL_Renderer *p_renderer, 
-		SDL_RendererFlip flip = SDL_FLIP_NONE);
+		double angle, int alpha, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
 
 	void draw_tile(std::string name, int margin, int spacing, int x, int y,

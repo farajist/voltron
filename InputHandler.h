@@ -1,4 +1,4 @@
-#ifndef __INPUT_HANDLER__
+ #ifndef __INPUT_HANDLER__
 #define __INPUT_HANDLER__
 
 #include <vector>

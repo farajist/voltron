@@ -1,26 +1,43 @@
 #ifndef __PLAYER__
 #define __PLAYER__
 
-#include "SDLGameObject.h"
+#include "ShooterObject.h"
 #include "LoaderParams.h"
 
-//This may be in SDLGameObject :v
+//This may be in ShooterObject :v
 #include "InputHandler.h"
+#include "BulletHandler.h"
+#include "SoundManager.h"
 #include "GameObjectFactory.h"
 
-class Player : public SDLGameObject
+class Player : public ShooterObject
 {
-public: 
-
-	// void load(int, int, int, int, std::string);
+public:
 	Player();
-	void draw();
-	void update();
-	void clean();
+	virtual ~Player() {}
 
-	void load(const LoaderParams*);
+	virtual void load(std::unique_ptr<LoaderParams> const &p_params);
+    
+    virtual void draw();
+    virtual void update();
+    virtual void clean();
+    
+    virtual void collision();
+    
+    virtual std::string type() { return "Player"; }
+
 private:
+
+	//bring back to life if live left
+	void resurrect();
 	void handle_input();
+
+	void handle_animation();
+
+	// player can be invulnerable for a time
+	int m_invulnerable;
+	int m_invulnerable_time;
+	int m_invulnerable_counter;
 };
 
 class PlayerCreator : public BaseCreator

@@ -1,10 +1,10 @@
 #ifndef __MENU_BUTTON_H__
 #define __MENU_BUTTON_H__
 
-#include "SDLGameObject.h"
+#include "ShooterObject.h"
 #include "GameObjectFactory.h"
 
-class MenuButton : public SDLGameObject
+class MenuButton : public ShooterObject
 {
 public:
 	MenuButton();
@@ -13,7 +13,7 @@ public:
 	virtual void update();
 	virtual void clean();
 
-	void load(const LoaderParams*);
+	void load(std::unique_ptr<LoaderParams> const &p_params);
 	
 	void set_callback(void(*callback)()) { m_callback = callback; }
 	int get_callback_id() { return m_callback_id; }

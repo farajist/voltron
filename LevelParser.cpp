@@ -1,6 +1,16 @@
 #include "LevelParser.h"
 
+#include <string>
+#include "LevelParser.h"
+#include "TextureManager.h"
+#include "Game.h"
+#include "ObjectLayer.h"
+#include "TileLayer.h"
+#include "GameObjectFactory.h"
+#include "base64.h"
+#include "Level.h"
 
+typedef TextureManager TextureMgr;
 Level* LevelParser::parse_level(const char* level_file)
 {
 	tinyxml2::XMLDocument level_doc(true, tinyxml2::COLLAPSE_WHITESPACE);
@@ -48,11 +58,14 @@ Level* LevelParser::parse_level(const char* level_file)
 			if (!std::strcmp(e->FirstChildElement()->Name(), "object"))
 			{
 				std::cout << "Found an object to parse !" << std::endl;
-				parse_object_layer(e, p_level->get_layers());
+				parse_object_layer(e, p_level->get_layers(), p_level);
 			} 
-			else if (!std::strcmp(e->FirstChildElement()->Name(), "data"))
+			else if (!std::strcmp(e->FirstChildElement()->Name(), "data") ||
+						(e->FirstChildElement()->NextSiblingElement() != 0 && 
+						!std::strcmp(e->FirstChildElement()->NextSiblingElement()->Name(), "data")))
 			{
-				parse_tile_layer(e, p_level->get_layers(), p_level->get_tilesets());
+				parse_tile_layer(e, p_level->get_layers(), p_level->get_tilesets(),
+				p_level->get_collision_layers());
 			}
 		}
 	}
@@ -90,10 +103,10 @@ void LevelParser::parse_tilesets(tinyxml2::XMLElement* ts_root, std::vector<Tile
 }
 
 void LevelParser::parse_tile_layer(tinyxml2::XMLElement* p_tile_elt, std::vector<Layer*>* p_layers,
-		const std::vector<Tileset>* p_tilesets)
+		const std::vector<Tileset>* p_tilesets, std::vector<TileLayer*> *p_collision_layers)
 {
 	TileLayer* p_tile_layer = new TileLayer(m_tile_size, *p_tilesets);
-
+	bool collidable = false;
 	//tile data 
 	std::vector<std::vector<int>> data;
 	std::string decoded_ids;
@@ -101,6 +114,18 @@ void LevelParser::parse_tile_layer(tinyxml2::XMLElement* p_tile_elt, std::vector
 	std::cout << "Commencing TileLayer parsing " << std::endl;
 	for (tinyxml2::XMLElement* e = p_tile_elt->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
 	{
+		if (!std::strcmp(e->Name(), "properties"))
+		{
+			for (tinyxml2::XMLElement* prop = e->FirstChildElement(); prop != NULL; prop = prop->NextSiblingElement()) {
+				if (!std::strcmp(prop->Value(), "property"))
+				{
+					if (!std::strcmp(prop->Attribute("name"), "collidable"))
+					{
+						collidable = true;
+					}
+				}
+			}
+		}
 		if (!std::strcmp(e->Name(), "data")){
 			p_data_node = e;
 			// std::cout << "Found data node " << std::endl;
@@ -165,7 +190,7 @@ void LevelParser::parse_textures(tinyxml2::XMLElement* p_prop)
 	p_prop->Attribute("name"), Game::get_instance()->get_renderer());
 }
 
-void LevelParser::parse_object_layer(tinyxml2::XMLElement *p_object_element, std::vector<Layer*>* p_layers)
+void LevelParser::parse_object_layer(tinyxml2::XMLElement *p_object_element, std::vector<Layer*>* p_layers, Level* p_level)
 {
 	//create an object layer
 	ObjectLayer* p_object_layer = new ObjectLayer();
@@ -180,13 +205,16 @@ void LevelParser::parse_object_layer(tinyxml2::XMLElement *p_object_element, std
 		{
 			std::cout << "commencing object parsing " << std::endl;
 			int x, y, width, height, num_frames, callback_id, anim_speed;
-			std::string texture_id;
+			std::string texture_id, type;
 
 			//get the initial node values
 			x = e->IntAttribute("x");
 			y = e->IntAttribute("y");
+
+			type = e->Attribute("type");
+			GameObject* p_game_object = GameObjectFactory::get_instance()->create(type);
 			std::cout << "x|y : " << x << y << std::endl;  
-			GameObject* p_game_object = GameObjectFactory::get_instance()->create(e->Attribute("type"));
+			// GameObject* p_game_object = GameObjectFactory::get_instance()->create(e->Attribute("type"));
 			std::cout << "parsing rest of the props : " << std::endl;  
 			//get prop values
 			for (tinyxml2::XMLElement* props = e->FirstChildElement(); props != NULL; props = props->NextSiblingElement())
@@ -231,8 +259,11 @@ void LevelParser::parse_object_layer(tinyxml2::XMLElement *p_object_element, std
 			}
 			std::cout << "width|height : " << width << height << std::endl;  
 			std::cout << "texture_id|num_frames|callback_id : " << texture_id << num_frames << callback_id << height << std::endl;
-			p_game_object->load(new LoaderParams(x, y, width, height, texture_id, num_frames, 
-			callback_id, anim_speed));
+			p_game_object->load(std::unique_ptr<LoaderParams>(new LoaderParams(x, y, width, height, texture_id, num_frames, callback_id, anim_speed)));
+
+			if (type == "Player") {
+				p_level->set_player(dynamic_cast<Player*>(p_game_object));
+			}
 			p_object_layer->get_game_objects()->push_back(p_game_object);
 		}
 	}
